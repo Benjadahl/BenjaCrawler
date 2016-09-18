@@ -27,15 +27,18 @@ class site(object):
         try:
             self.aTags = self.soup.findAll("a")
             for element in self.aTags:
+                #Should add check for relative domains
                 self.links.append(element["href"])
         except Exception:
             print("Error while gettings links for: " + self.url)
 
+queue = [site("http://rend.al")]
 
-
-site1 = site("http://www.google.com")
-site1.dlSite()
-site1.makeSoup()
-site1.getHref()
-
-print(site1.links)
+for i in range(0, 150):
+    queue[i].dlSite()
+    queue[i].makeSoup()
+    queue[i].getHref()
+    for link in queue[i].links:
+        queue.append(site(link))
+    print(queue[i].links)
+    print("Crawled " + str(i) + " links")
