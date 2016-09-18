@@ -28,17 +28,27 @@ class site(object):
             self.aTags = self.soup.findAll("a")
             for element in self.aTags:
                 #Should add check for relative domains
-                self.links.append(element["href"])
+                href = element["href"]
+                if (href[0] == "/"):
+                    href = self.url + href
+                self.links.append(href)
         except Exception:
             print("Error while gettings links for: " + self.url)
 
-queue = [site("http://rend.al")]
+queue = [site("http://google.com")]
+text = ""
 
-for i in range(0, 150):
+for i in range(0, 5):
     queue[i].dlSite()
     queue[i].makeSoup()
     queue[i].getHref()
+    text += queue[i].url + "\n"
     for link in queue[i].links:
+        text += "    " + link + "\n"
         queue.append(site(link))
-    print(queue[i].links)
-    print("Crawled " + str(i) + " links")
+    print("Crawled " + str(i + 1) + " links")
+print("Done crawling saving result to crawl.txt \n    Thank you for crawling with BenjaCrawler")
+f = open("crawl.txt","w")
+f.write("I am a test")
+f.write(text)
+f.close()
