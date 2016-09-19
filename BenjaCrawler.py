@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import wget
 import time
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
@@ -49,6 +48,5 @@ for i in range(0, 5):
     print("Crawled " + str(i + 1) + " links")
 print("Done crawling saving result to crawl.txt \n    Thank you for crawling with BenjaCrawler")
 f = open("crawl.txt","w")
-f.write("I am a test")
 f.write(text)
 f.close()
