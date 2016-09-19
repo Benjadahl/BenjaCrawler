@@ -34,17 +34,21 @@ class site(object):
         except Exception:
             print("Error while gettings links for: " + self.url)
 
-queue = [site("http://google.com")]
+queue = [site("http://dr.dk")]
+crawledLinks = {}
 text = ""
 
-for i in range(0, 5):
+for i in range(0, 1000):
     queue[i].dlSite()
     queue[i].makeSoup()
     queue[i].getHref()
     text += queue[i].url + "\n"
     for link in queue[i].links:
-        text += "    " + link + "\n"
-        queue.append(site(link))
+        if(crawledLinks[link] != True):
+            text += "    " + link + "\n"
+            queue.append(site(link))
+            crawledLinks[link] = True
+            print(link)
     print("Crawled " + str(i + 1) + " links")
 print("Done crawling saving result to crawl.txt \n    Thank you for crawling with BenjaCrawler")
 f = open("crawl.txt","w")
