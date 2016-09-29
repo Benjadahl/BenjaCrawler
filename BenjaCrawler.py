@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 
 import time
+import sys
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
+
+sourceSite = sys.argv[1]
+maxSite = sys.argv[2]
 
 class site(object):
     def __init__(self, url):
@@ -26,7 +30,7 @@ class site(object):
         try:
             self.aTags = self.soup.findAll("a")
             for element in self.aTags:
-                #Should add check for relative domains
+                #Checks for relative domains
                 href = element["href"]
                 if (href[0] == "/"):
                     href = self.url + href
@@ -38,19 +42,23 @@ queue = [site("http://dr.dk")]
 crawledLinks = {}
 text = ""
 
-for i in range(0, 1000):
+"""STARTUP CODE"""
+print("Starting benjaCrawler for site: " + sourceSite)
+startTime = time.time()
+
+for i in range(0, int(maxSite)):
     queue[i].dlSite()
     queue[i].makeSoup()
     queue[i].getHref()
     text += queue[i].url + "\n"
     for link in queue[i].links:
-        if(crawledLinks[link] != True):
+        if(not hasattr(crawledLinks, link)):
             text += "    " + link + "\n"
             queue.append(site(link))
             crawledLinks[link] = True
-            print(link)
+            #print(link)
     print("Crawled " + str(i + 1) + " links")
-print("Done crawling saving result to crawl.txt \n    Thank you for crawling with BenjaCrawler")
+print("Done crawling saving result to crawl.txt \n    Thank you for crawling with BenjaCrawler \n   "  + str(time.time() - startTime) + " seconds")
 f = open("crawl.txt","w")
 f.write(text)
 f.close()
