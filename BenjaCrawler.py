@@ -4,6 +4,7 @@ import time
 import sys
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
+import sqlite3
 
 sourceSite = sys.argv[1]
 maxSite = sys.argv[2]
@@ -46,10 +47,18 @@ text = ""
 print("Starting benjaCrawler for site: " + sourceSite)
 startTime = time.time()
 
+"""START CONNECTION TO SQL FILE"""
+conn = sqlite3.connect("crawl.sqlite")
+c = conn.cursor()
+
+
+
 for i in range(0, int(maxSite)):
     queue[i].dlSite()
     queue[i].makeSoup()
     queue[i].getHref()
+    #Create the table if it does not exist
+    c.execute("CREATE TABLE IF NOT EXISTS " + queue[i].url + "(id INTEGER, name STRING);")
     text += queue[i].url + "\n"
     for link in queue[i].links:
         if(not hasattr(crawledLinks, link)):

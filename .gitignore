@@ -90,3 +90,4 @@ ENV/
 
 # BenjaCrawler custom ignores
 crawl.txt
+crawl.sqlite
